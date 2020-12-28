@@ -1,0 +1,4 @@
+dataclasses==0.8;python_version<"3.7"
+elasticsearch==7.10.1
+python-dotenv==0.15.0
+python-telegram-bot==13.1

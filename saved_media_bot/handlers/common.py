@@ -1,0 +1,2 @@
+ADDING_KEYWORDS_STATE = 0
+DOCUMENT_TO_INDEX_KEY = 'document_to_index'
