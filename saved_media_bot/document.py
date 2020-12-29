@@ -6,7 +6,11 @@ from typing import Dict, Union
 class DocumentType(Enum):
     AUDIO = 'audio'
     ANIMATION = 'animation'
+    CONTACT = 'contact'
+    DOCUMENT = 'document'
+    LOCATION = 'location'
     PHOTO = 'photo'
+    STICKER = 'sticker'
     VIDEO = 'video'
     VOICE = 'voice'
 
