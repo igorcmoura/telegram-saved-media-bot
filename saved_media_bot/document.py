@@ -8,6 +8,7 @@ class DocumentType(Enum):
     ANIMATION = 'animation'
     PHOTO = 'photo'
     VIDEO = 'video'
+    VOICE = 'voice'
 
 
 @dataclass

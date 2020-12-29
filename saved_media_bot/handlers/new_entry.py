@@ -17,6 +17,7 @@ from .audio import audio_handler
 from .animation import animation_handler
 from .photo import photo_handler
 from .video import video_handler
+from .voice import voice_handler
 
 
 logger = logging.getLogger(__name__)
@@ -52,6 +53,7 @@ new_entry_handler = ConversationHandler(
         animation_handler,
         photo_handler,
         video_handler,
+        voice_handler,
     ],
     states={
         ADDING_KEYWORDS_STATE: [MessageHandler(Filters.text & (~Filters.command), add_keywords)],
