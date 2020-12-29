@@ -28,6 +28,7 @@ def audio_handler(message: Message) -> Dict:
         'file_name': audio.file_name,
         'mime_type': audio.mime_type,
         'file_size': audio.file_size,
+        'caption': message.caption,
     })
     if audio.thumb:
         thumb = audio.thumb

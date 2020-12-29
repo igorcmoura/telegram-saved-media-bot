@@ -39,5 +39,6 @@ def photo_inline_result(id: str, doc: Document) -> InlineQueryResultCachedPhoto:
     return InlineQueryResultCachedPhoto(
         id=id,
         photo_file_id=content['best_photo'],
+        title=doc.keywords,
         caption=content.get('caption'),
     )

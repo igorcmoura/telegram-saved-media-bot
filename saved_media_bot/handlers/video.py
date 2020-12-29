@@ -26,6 +26,7 @@ def video_handler(message: Message) -> Dict:
         'file_name': video.file_name,
         'mime_type': video.mime_type,
         'file_size': video.file_size,
+        'caption': message.caption,
     })
     if video.thumb:
         thumb = video.thumb

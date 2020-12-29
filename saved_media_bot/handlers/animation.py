@@ -42,5 +42,6 @@ def create_animation_inline_result(id: str, doc: Document) -> InlineQueryResultC
     return InlineQueryResultCachedGif(
         id=id,
         gif_file_id=content['file_id'],
+        title=doc.keywords,
         caption=content.get('caption'),
     )
