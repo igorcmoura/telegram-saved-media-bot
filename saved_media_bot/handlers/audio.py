@@ -1,29 +1,23 @@
 import logging
+from typing import Dict
 
-from telegram import Update, InlineQueryResultCachedAudio
-from telegram.ext import (
-    CallbackContext,
-    ConversationHandler,
-    Filters,
-    MessageHandler,
-)
+from telegram import Message, InlineQueryResultCachedAudio
+from telegram.ext import Filters
 
 from ..common import filter_dict_none
 from ..document import Document, DocumentType
-from .common import ADDING_KEYWORDS_STATE, DOCUMENT_TO_INDEX_KEY
+
 from .inline_search import inline_result_creator
+from .media_handler import media_handler, MediaHandlingError
 
 logger = logging.getLogger(__name__)
 
 
-def new_audio(update: Update, context: CallbackContext) -> int:
-    user = update.message.from_user
-    logger.info(f'User {user.id} sent an audio for indexing.')
-
-    audio = update.message.audio
+@media_handler(Filters.audio, DocumentType.AUDIO)
+def audio_handler(message: Message) -> Dict:
+    audio = message.audio
     if not audio.title:
-        update.effective_chat.send_message(text='Invalid audio file, it must have a title metadata.')
-        return ConversationHandler.END
+        raise MediaHandlingError('Invalid audio file, it must have a title metadata.')
 
     content = filter_dict_none({
         'file_id': audio.file_id,
@@ -44,26 +38,14 @@ def new_audio(update: Update, context: CallbackContext) -> int:
             'height': thumb.height,
             'file_size': thumb.file_size,
         })
-
-    doc = Document(
-        user_id=user.id,
-        doc_type=DocumentType.AUDIO,
-        content=content,
-    )
-    context.chat_data[DOCUMENT_TO_INDEX_KEY] = doc
-
-    update.effective_chat.send_message(text='Now send me keywords to index this audio.')
-    return ADDING_KEYWORDS_STATE
+    return content
 
 
 @inline_result_creator(DocumentType.AUDIO)
-def create_audio_inline_result(id: str, doc: Document):
+def create_audio_inline_result(id: str, doc: Document) -> InlineQueryResultCachedAudio:
     content = doc.content
     return InlineQueryResultCachedAudio(
         id=id,
         audio_file_id=content['file_id'],
         caption=content.get('caption'),
     )
-
-
-new_audio_handler = MessageHandler(Filters.audio, new_audio)

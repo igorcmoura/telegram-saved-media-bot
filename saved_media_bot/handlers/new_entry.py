@@ -11,10 +11,11 @@ from telegram.update import Update
 
 from ..document import Document
 from ..es_store import store
-from .common import ADDING_KEYWORDS_STATE, DOCUMENT_TO_INDEX_KEY
-from .audio import new_audio_handler
-from .animation import new_animation_handler
-from .photo import new_photo_handler
+
+from .media_handler import ADDING_KEYWORDS_STATE, DOCUMENT_TO_INDEX_KEY
+from .audio import audio_handler
+from .animation import animation_handler
+from .photo import photo_handler
 
 
 logger = logging.getLogger(__name__)
@@ -45,7 +46,11 @@ def cancel(update: Update, context: CallbackContext) -> int:
 
 
 new_entry_handler = ConversationHandler(
-    entry_points=[new_audio_handler, new_animation_handler, new_photo_handler],
+    entry_points=[
+        audio_handler,
+        animation_handler,
+        photo_handler
+    ],
     states={
         ADDING_KEYWORDS_STATE: [MessageHandler(Filters.text & (~Filters.command), add_keywords)],
     },

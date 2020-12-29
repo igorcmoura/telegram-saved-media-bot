@@ -1,25 +1,21 @@
 import logging
+from typing import Dict
 
-from telegram import Update, InlineQueryResultCachedPhoto
-from telegram.ext import (
-    CallbackContext,
-    Filters,
-    MessageHandler,
-)
+from telegram import Message, InlineQueryResultCachedPhoto
+from telegram.ext import Filters
 
 from ..common import filter_dict_none
 from ..document import Document, DocumentType
-from .common import ADDING_KEYWORDS_STATE, DOCUMENT_TO_INDEX_KEY
+
 from .inline_search import inline_result_creator
+from .media_handler import media_handler
 
 logger = logging.getLogger(__name__)
 
 
-def new_photo(update: Update, context: CallbackContext) -> int:
-    user = update.message.from_user
-    logger.info(f'User {user.id} sent a photo for indexing.')
-
-    photos = update.message.photo
+@media_handler(Filters.photo, DocumentType.PHOTO)
+def photo_handler(message: Message) -> Dict:
+    photos = message.photo
     content = filter_dict_none({
         'photos': {
             photo.file_id: {
@@ -32,28 +28,16 @@ def new_photo(update: Update, context: CallbackContext) -> int:
             for photo in photos
         },
         'best_photo': max(photos, key=lambda p: p.file_size).file_id,
-        'caption': update.message.caption,
+        'caption': message.caption,
     })
-
-    doc = Document(
-        user_id=user.id,
-        doc_type=DocumentType.PHOTO,
-        content=content,
-    )
-    context.chat_data[DOCUMENT_TO_INDEX_KEY] = doc
-
-    update.effective_chat.send_message(text='Now send me keywords to index this photo.')
-    return ADDING_KEYWORDS_STATE
+    return content
 
 
 @inline_result_creator(DocumentType.PHOTO)
-def create_photo_inline_result(id: str, doc: Document):
+def photo_inline_result(id: str, doc: Document) -> InlineQueryResultCachedPhoto:
     content = doc.content
     return InlineQueryResultCachedPhoto(
         id=id,
         photo_file_id=content['best_photo'],
         caption=content.get('caption'),
     )
-
-
-new_photo_handler = MessageHandler(Filters.photo, new_photo)
