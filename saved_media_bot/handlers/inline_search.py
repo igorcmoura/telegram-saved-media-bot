@@ -28,7 +28,7 @@ class InlineResultCreatorLoader:
 
 def inline_search(update: Update, context: CallbackContext):
     user = update.inline_query.from_user
-    logger.info(f'User {user.id} is querying a document.')
+    logger.info(f'User {user.name}({user.id}) is querying a document.')
 
     query = update.inline_query.query
     if query:

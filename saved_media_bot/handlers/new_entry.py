@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 def add_keywords(update: Update, context: CallbackContext) -> int:
     user = update.message.from_user
-    logger.info(f'Indexing new document from user {user.id}.')
+    logger.info(f'Indexing new document from user {user.name}({user.id}).')
 
     doc: Document = context.chat_data.get(DOCUMENT_TO_INDEX_KEY)
     if not doc:
@@ -41,7 +41,7 @@ def add_keywords(update: Update, context: CallbackContext) -> int:
 
 def cancel(update: Update, context: CallbackContext) -> int:
     user = update.message.from_user
-    logger.info(f'User {user.id} canceled the the new document indexing.')
+    logger.info(f'User {user.name}({user.id}) canceled the the new document indexing.')
     update.effective_chat.send_message(text="Ok, I won't index this message.")
 
     return ConversationHandler.END
