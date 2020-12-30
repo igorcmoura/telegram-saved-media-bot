@@ -1,5 +1,6 @@
 from typing import Dict, Iterable
 from elasticsearch import Elasticsearch
+from elasticsearch.exceptions import NotFoundError
 
 from .common import filter_dict_none
 from .document import Document, DocumentType
@@ -33,6 +34,13 @@ class ElasticsearchStore:
             'content': doc.content,
         })
         self._client.index(index=self.INDEX_NAME, body=es_doc)
+
+    def delete(self, id: str) -> None:
+        try:
+            self._client.delete(index=self.INDEX_NAME, id=id)
+        except NotFoundError:
+            # TODO maybe this should be handled correctly...
+            pass
 
     def get_all(self, user_id: str) -> Iterable[Document]:
         res = self._client.search(
