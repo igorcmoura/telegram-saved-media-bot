@@ -1,10 +1,8 @@
 import logging
 from typing import Callable, Dict
 
-from telegram import Update
-from telegram.ext import CallbackContext
-from telegram.ext.inlinequeryhandler import InlineQueryHandler
-from telegram.inline.inlinequeryresult import InlineQueryResult
+from telegram import Update, InlineQueryResult
+from telegram.ext import CallbackContext, InlineQueryHandler
 
 from ..es_store import store
 from ..document import Document, DocumentType

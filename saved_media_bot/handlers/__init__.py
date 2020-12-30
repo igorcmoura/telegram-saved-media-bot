@@ -1,6 +1,6 @@
 import logging
 
-from telegram.update import Update
+from telegram import Update
 from telegram.ext import CallbackContext, CommandHandler
 
 from .new_entry import new_entry_handler

@@ -1,5 +1,6 @@
 import logging
 
+from telegram import Update
 from telegram.ext import (
     CallbackContext,
     CommandHandler,
@@ -7,7 +8,6 @@ from telegram.ext import (
     Filters,
     MessageHandler,
 )
-from telegram.update import Update
 
 from ..document import Document
 from ..es_store import store
@@ -22,7 +22,6 @@ from .photo import photo_handler
 from .sticker import sticker_handler
 from .video import video_handler
 from .voice import voice_handler
-
 
 logger = logging.getLogger(__name__)
 
