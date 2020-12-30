@@ -28,10 +28,10 @@ def contact_handler(message: Message) -> Dict:
 
 
 @inline_result_creator(DocumentType.CONTACT)
-def create_contact_inline_result(id: str, doc: Document) -> InlineQueryResultContact:
+def create_contact_inline_result(doc: Document) -> InlineQueryResultContact:
     content = doc.content
     return InlineQueryResultContact(
-        id=id,
+        id=doc.internal_id,
         phone_number=content['phone_number'],
         first_name=content['first_name'],
         last_name=content.get('last_name'),

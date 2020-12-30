@@ -20,4 +20,5 @@ class Document:
     user_id: str
     doc_type: DocumentType
     content: Dict
+    internal_id: Union[str, None] = None
     keywords: Union[str, None] = None

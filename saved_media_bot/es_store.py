@@ -69,15 +69,16 @@ class ElasticsearchStore:
 
     @staticmethod
     def _get_docs_from_response(response: Dict) -> Iterable[Document]:
-        es_docs = (doc['_source'] for doc in response['hits']['hits'])
+        es_docs = ((doc['_id'], doc['_source']) for doc in response['hits']['hits'])
         return (
             Document(
-                user_id=doc['user_id'],
+                internal_id=doc_id,
                 doc_type=DocumentType(doc['type']),
+                user_id=doc['user_id'],
                 keywords=doc['keywords'],
                 content=doc['content']
             )
-            for doc in es_docs
+            for doc_id, doc in es_docs
         )
 
 

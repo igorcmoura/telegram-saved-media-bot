@@ -43,10 +43,10 @@ def audio_handler(message: Message) -> Dict:
 
 
 @inline_result_creator(DocumentType.AUDIO)
-def create_audio_inline_result(id: str, doc: Document) -> InlineQueryResultCachedAudio:
+def create_audio_inline_result(doc: Document) -> InlineQueryResultCachedAudio:
     content = doc.content
     return InlineQueryResultCachedAudio(
-        id=id,
+        id=doc.internal_id,
         audio_file_id=content['file_id'],
         caption=content.get('caption'),
     )

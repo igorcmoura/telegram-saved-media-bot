@@ -47,9 +47,9 @@ def sticker_handler(message: Message) -> Dict:
 
 
 @inline_result_creator(DocumentType.STICKER)
-def sticker_inline_result(id: str, doc: Document) -> InlineQueryResultCachedSticker:
+def sticker_inline_result(doc: Document) -> InlineQueryResultCachedSticker:
     content = doc.content
     return InlineQueryResultCachedSticker(
-        id=id,
+        id=doc.internal_id,
         sticker_file_id=content['file_id'],
     )

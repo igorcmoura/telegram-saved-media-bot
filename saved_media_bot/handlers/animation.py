@@ -37,10 +37,10 @@ def animation_handler(message: Message) -> Dict:
 
 
 @inline_result_creator(DocumentType.ANIMATION)
-def create_animation_inline_result(id: str, doc: Document) -> InlineQueryResultCachedGif:
+def create_animation_inline_result(doc: Document) -> InlineQueryResultCachedGif:
     content = doc.content
     return InlineQueryResultCachedGif(
-        id=id,
+        id=doc.internal_id,
         gif_file_id=content['file_id'],
         title=doc.keywords,
         caption=content.get('caption'),

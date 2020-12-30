@@ -28,10 +28,10 @@ def voice_handler(message: Message) -> Dict:
 
 
 @inline_result_creator(DocumentType.VOICE)
-def create_voice_inline_result(id: str, doc: Document) -> InlineQueryResultCachedVoice:
+def create_voice_inline_result(doc: Document) -> InlineQueryResultCachedVoice:
     content = doc.content
     return InlineQueryResultCachedVoice(
-        id=id,
+        id=doc.internal_id,
         voice_file_id=content['file_id'],
         title=doc.keywords,
         caption=content.get('caption'),

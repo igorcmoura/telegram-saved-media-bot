@@ -41,10 +41,10 @@ def video_handler(message: Message) -> Dict:
 
 
 @inline_result_creator(DocumentType.VIDEO)
-def create_video_inline_result(id: str, doc: Document) -> InlineQueryResultCachedVideo:
+def create_video_inline_result(doc: Document) -> InlineQueryResultCachedVideo:
     content = doc.content
     return InlineQueryResultCachedVideo(
-        id=id,
+        id=doc.internal_id,
         video_file_id=content['file_id'],
         title=doc.keywords,
         caption=content.get('caption'),

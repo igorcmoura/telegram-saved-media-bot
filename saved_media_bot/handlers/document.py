@@ -38,10 +38,10 @@ def document_handler(message: Message) -> Dict:
 
 
 @inline_result_creator(DocumentType.DOCUMENT)
-def create_document_inline_result(id: str, doc: Document) -> InlineQueryResultCachedDocument:
+def create_document_inline_result(doc: Document) -> InlineQueryResultCachedDocument:
     content = doc.content
     return InlineQueryResultCachedDocument(
-        id=id,
+        id=doc.internal_id,
         document_file_id=content['file_id'],
         title=doc.keywords,
         description=content['file_name'],

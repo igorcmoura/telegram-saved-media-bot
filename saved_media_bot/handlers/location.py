@@ -25,10 +25,10 @@ def location_handler(message: Message) -> Dict:
 
 
 @inline_result_creator(DocumentType.LOCATION)
-def location_inline_result(id: str, doc: Document) -> InlineQueryResultLocation:
+def location_inline_result(doc: Document) -> InlineQueryResultLocation:
     content = doc.content
     return InlineQueryResultLocation(
-        id=id,
+        id=doc.internal_id,
         latitude=content['latitude'],
         longitude=content['longitude'],
         title=doc.keywords,

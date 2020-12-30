@@ -34,10 +34,10 @@ def photo_handler(message: Message) -> Dict:
 
 
 @inline_result_creator(DocumentType.PHOTO)
-def photo_inline_result(id: str, doc: Document) -> InlineQueryResultCachedPhoto:
+def photo_inline_result(doc: Document) -> InlineQueryResultCachedPhoto:
     content = doc.content
     return InlineQueryResultCachedPhoto(
-        id=id,
+        id=doc.internal_id,
         photo_file_id=content['best_photo'],
         title=doc.keywords,
         caption=content.get('caption'),
