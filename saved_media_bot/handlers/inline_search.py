@@ -38,7 +38,12 @@ def inline_search(update: Update, context: CallbackContext):
         inline_result_creators.get_for(doc.doc_type)(doc)
         for doc in store_results
     ]
-    context.bot.answer_inline_query(update.inline_query.id, results, is_personal=True)
+    context.bot.answer_inline_query(
+        inline_query_id=update.inline_query.id,
+        results=results,
+        is_personal=True,
+        cache_time=0,
+    )
 
 
 inline_result_creators = InlineResultCreatorLoader()
