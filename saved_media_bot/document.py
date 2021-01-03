@@ -11,6 +11,7 @@ class DocumentType(Enum):
     LOCATION = 'location'
     PHOTO = 'photo'
     STICKER = 'sticker'
+    TEXT = 'text'
     VIDEO = 'video'
     VOICE = 'voice'
 

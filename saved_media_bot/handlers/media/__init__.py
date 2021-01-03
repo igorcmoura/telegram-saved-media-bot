@@ -6,6 +6,7 @@ from .document import document_handler
 from .location import location_handler
 from .photo import photo_handler
 from .sticker import sticker_handler
+from .text import text_handler
 from .video import video_handler
 from .voice import voice_handler
 
@@ -19,6 +20,7 @@ __all__ = [
     'location_handler',
     'photo_handler',
     'sticker_handler',
+    'text_handler',
     'video_handler',
     'voice_handler',
 ]
