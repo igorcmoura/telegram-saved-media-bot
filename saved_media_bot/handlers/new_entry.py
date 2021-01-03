@@ -12,16 +12,16 @@ from telegram.ext import (
 from ..document import Document
 from ..es_store import store
 
-from .media_handler import ADDING_KEYWORDS_STATE, DOCUMENT_TO_INDEX_KEY
-from .audio import audio_handler
-from .animation import animation_handler
-from .contact import contact_handler
-from .document import document_handler
-from .location import location_handler
-from .photo import photo_handler
-from .sticker import sticker_handler
-from .video import video_handler
-from .voice import voice_handler
+from .media import ADDING_KEYWORDS_STATE, DOCUMENT_TO_INDEX_KEY
+from .media import audio_handler
+from .media import animation_handler
+from .media import contact_handler
+from .media import document_handler
+from .media import location_handler
+from .media import photo_handler
+from .media import sticker_handler
+from .media import video_handler
+from .media import voice_handler
 
 logger = logging.getLogger(__name__)
 

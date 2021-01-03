@@ -10,7 +10,7 @@ from telegram.ext import (
     MessageHandler,
 )
 
-from ..document import Document, DocumentType
+from ...document import Document, DocumentType
 
 logger = logging.getLogger(__name__)
 

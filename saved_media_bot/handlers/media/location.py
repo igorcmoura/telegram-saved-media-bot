@@ -4,10 +4,11 @@ from typing import Dict
 from telegram import Message, InlineQueryResultLocation
 from telegram.ext import Filters
 
-from ..common import filter_dict_none
-from ..document import Document, DocumentType
+from ...common import filter_dict_none
+from ...document import Document, DocumentType
 
-from .inline_search import inline_result_creator
+from ..inline_search import inline_result_creator
+
 from .media_handler import media_handler
 
 logger = logging.getLogger(__name__)
