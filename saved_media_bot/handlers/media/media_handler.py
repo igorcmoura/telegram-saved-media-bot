@@ -1,3 +1,4 @@
+from datetime import datetime
 from functools import wraps
 import logging
 from typing import Callable
@@ -38,7 +39,10 @@ def media_handler(filters: BaseFilter, doc_type: DocumentType):
                 update.effective_chat.send_message(text=e.msg)
                 return ConversationHandler.END
 
+            now = datetime.now()
             doc = Document(
+                created_at=now,
+                last_used_at=now,
                 user_id=user.id,
                 doc_type=doc_type,
                 content=content,

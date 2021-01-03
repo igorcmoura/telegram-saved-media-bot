@@ -1,3 +1,4 @@
+from datetime import date, datetime
 from typing import Dict, Iterable
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import NotFoundError
@@ -10,6 +11,8 @@ class ElasticsearchStore:
     INDEX_NAME = 'telegram-saved-media-bot'
     INDEX_MAPPING = {
         'properties': {
+            'created_at': {'type': 'date'},
+            'last_used_at': {'type': 'date'},
             'user_id': {'type': 'keyword'},
             'type': {'type': 'keyword'},
             'keywords': {'type': 'search_as_you_type'}
@@ -50,7 +53,8 @@ class ElasticsearchStore:
         res = self._client.search(
             index=self.INDEX_NAME,
             body={
-                'query': {'bool': {'filter': {'term': {'user_id': user_id}}}}
+                'query': {'bool': {'filter': {'term': {'user_id': user_id}}}},
+                'sort': ['_score', {'last_used_at': 'desc'}],
             }
         )
         return self._get_docs_from_response(res)
@@ -74,7 +78,8 @@ class ElasticsearchStore:
                             }
                         }]
                     }
-                }
+                },
+                'sort': ['_score', {'last_used_at': 'desc'}],
             }
         )
         return self._get_docs_from_response(res)
@@ -89,6 +94,8 @@ class ElasticsearchStore:
     def _doc_from_es_source(es_source: Dict, doc_id: str = None) -> Document:
         return Document(
             internal_id=doc_id,
+            created_at=datetime.fromtimestamp(es_source['created_at']),
+            last_used_at=datetime.fromtimestamp(es_source['last_used_at']),
             doc_type=DocumentType(es_source['type']),
             user_id=es_source['user_id'],
             keywords=es_source['keywords'],
@@ -98,6 +105,8 @@ class ElasticsearchStore:
     @staticmethod
     def _es_source_from_doc(doc: Document) -> Dict:
         return filter_dict_none({
+            'created_at': doc.created_at.timestamp(),
+            'last_used_at': doc.last_used_at.timestamp(),
             'user_id': doc.user_id,
             'type': doc.doc_type.value,
             'keywords': doc.keywords,

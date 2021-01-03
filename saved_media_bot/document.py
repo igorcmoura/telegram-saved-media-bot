@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
 from typing import Dict, Union
 
@@ -18,6 +19,8 @@ class DocumentType(Enum):
 
 @dataclass
 class Document:
+    created_at: datetime
+    last_used_at: datetime
     user_id: str
     doc_type: DocumentType
     content: Dict

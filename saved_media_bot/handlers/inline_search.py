@@ -1,8 +1,9 @@
+from datetime import datetime
 import logging
 from typing import Callable, Dict
 
 from telegram import Update, InlineQueryResult
-from telegram.ext import CallbackContext, InlineQueryHandler
+from telegram.ext import CallbackContext, ChosenInlineResultHandler, InlineQueryHandler
 
 from ..es_store import store
 from ..document import Document, DocumentType
@@ -46,7 +47,18 @@ def inline_search(update: Update, context: CallbackContext):
     )
 
 
+def update_last_used_at(update: Update, context: CallbackContext):
+    user = update.chosen_inline_result.from_user
+    logger.info(f'User {user.name}({user.id}) selected a query result. Updating last used date.')
+
+    doc_id = update.chosen_inline_result.result_id
+    doc = store.get(doc_id)
+    doc.last_used_at = datetime.now()
+    store.update(doc_id, doc)
+
+
 inline_result_creators = InlineResultCreatorLoader()
 inline_result_creator = inline_result_creators.decorator
 
 inline_search_handler = InlineQueryHandler(inline_search)
+chosen_inline_result_handler = ChosenInlineResultHandler(update_last_used_at)
