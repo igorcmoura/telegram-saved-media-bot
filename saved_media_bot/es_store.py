@@ -27,13 +27,17 @@ class ElasticsearchStore:
             )
 
     def save(self, doc: Document) -> None:
-        es_doc = filter_dict_none({
-            'user_id': doc.user_id,
-            'type': doc.doc_type.value,
-            'keywords': doc.keywords,
-            'content': doc.content,
-        })
-        self._client.index(index=self.INDEX_NAME, body=es_doc)
+        source = self._es_source_from_doc(doc)
+        self._client.index(index=self.INDEX_NAME, body=source)
+
+    def get(self, id: str) -> Document:
+        es_doc = self._client.get(index=self.INDEX_NAME, id=id)
+        source = es_doc['_source']
+        return self._doc_from_es_source(source, id)
+
+    def update(self, id: str, doc: Document):
+        source = self._es_source_from_doc(doc)
+        self._client.index(index=self.INDEX_NAME, id=id, body=source)
 
     def delete(self, id: str) -> None:
         try:
@@ -75,19 +79,30 @@ class ElasticsearchStore:
         )
         return self._get_docs_from_response(res)
 
-    @staticmethod
-    def _get_docs_from_response(response: Dict) -> Iterable[Document]:
+    @classmethod
+    def _get_docs_from_response(cls, response: Dict) -> Iterable[Document]:
         es_docs = ((doc['_id'], doc['_source']) for doc in response['hits']['hits'])
-        return (
-            Document(
-                internal_id=doc_id,
-                doc_type=DocumentType(doc['type']),
-                user_id=doc['user_id'],
-                keywords=doc['keywords'],
-                content=doc['content']
-            )
-            for doc_id, doc in es_docs
+        for doc_id, source in es_docs:
+            yield cls._doc_from_es_source(source, doc_id)
+
+    @staticmethod
+    def _doc_from_es_source(es_source: Dict, doc_id: str = None) -> Document:
+        return Document(
+            internal_id=doc_id,
+            doc_type=DocumentType(es_source['type']),
+            user_id=es_source['user_id'],
+            keywords=es_source['keywords'],
+            content=es_source['content']
         )
+
+    @staticmethod
+    def _es_source_from_doc(doc: Document) -> Dict:
+        return filter_dict_none({
+            'user_id': doc.user_id,
+            'type': doc.doc_type.value,
+            'keywords': doc.keywords,
+            'content': doc.content,
+        })
 
 
 store = ElasticsearchStore()

@@ -4,6 +4,7 @@ from telegram import Update
 from telegram.ext import CallbackContext, CommandHandler
 
 from .delete import delete_handler
+from .edit import edit_handler
 from .new_entry import new_entry_handler
 from .inline_search import inline_search_handler
 
@@ -21,6 +22,7 @@ start_handler = CommandHandler('start', start_command)
 handlers = [
     start_handler,
     delete_handler,
+    edit_handler,
     new_entry_handler,
     inline_search_handler,
 ]
