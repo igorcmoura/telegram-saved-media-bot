@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import datetime
 from typing import Dict, Iterable
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import NotFoundError
