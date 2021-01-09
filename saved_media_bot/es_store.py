@@ -18,6 +18,8 @@ class ElasticsearchStore:
             'keywords': {'type': 'search_as_you_type'}
         }
     }
+    # TODO: find an optimal value that won't affect performance
+    MAX_SEARCH_RESULTS = 10000
 
     def __init__(self):
         self._client = Elasticsearch()
@@ -55,6 +57,7 @@ class ElasticsearchStore:
             body={
                 'query': {'bool': {'filter': {'term': {'user_id': user_id}}}},
                 'sort': ['_score', {'last_used_at': 'desc'}],
+                'size': self.MAX_SEARCH_RESULTS,
             }
         )
         return self._get_docs_from_response(res)
@@ -80,6 +83,7 @@ class ElasticsearchStore:
                     }
                 },
                 'sort': ['_score', {'last_used_at': 'desc'}],
+                'size': self.MAX_SEARCH_RESULTS,
             }
         )
         return self._get_docs_from_response(res)
