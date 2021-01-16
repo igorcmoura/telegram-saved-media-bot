@@ -23,13 +23,13 @@ SELECTING_MEDIA_STATE = 0
 EDITING_MEDIA_STATE = 1
 ADDING_KEYWORDS_STATE = 2
 
-CHAT_ON_EDITION_STATE_KEY = 'chat_on_edition_state'
+CHAT_ON_EDITING_STATE_KEY = 'chat_on_editing_state'
 DOCUMENT_TO_EDIT_KEY = 'document_to_edit'
 
 
 def begin_edit(update: Update, context: CallbackContext):
     user = update.message.from_user
-    logger.info(f'User {user.name}({user.id}) stated an edition.')
+    logger.info(f'User {user.name}({user.id}) started an editing.')
 
     update.effective_chat.send_message(
         text='Use the inline search to select the message to be edited.',
@@ -39,7 +39,7 @@ def begin_edit(update: Update, context: CallbackContext):
         )]]),
     )
 
-    context.bot_data[CHAT_ON_EDITION_STATE_KEY] = update.effective_chat.id
+    context.bot_data[CHAT_ON_EDITING_STATE_KEY] = update.effective_chat.id
     return SELECTING_MEDIA_STATE
 
 
@@ -48,11 +48,11 @@ def check_selection(update: Update, context: CallbackContext):
     chat = update.effective_chat
     logger.info(f'User {user.name}({user.id}) sent a message to be edited on chat {chat.id}.')
 
-    chat_on_edition_state = context.bot_data.get(CHAT_ON_EDITION_STATE_KEY)
-    if not chat_on_edition_state:
-        raise RuntimeError("Couldn't retrieve chat_id where edition is happening.")
+    chat_on_editing_state = context.bot_data.get(CHAT_ON_EDITING_STATE_KEY)
+    if not chat_on_editing_state:
+        raise RuntimeError("Couldn't retrieve chat_id where editing is happening.")
 
-    if chat_on_edition_state != chat.id:
+    if chat_on_editing_state != chat.id:
         logger.info(f'User {user.name}({user.id}) sent the message to be edited on the wrong chat.')
         return SELECTING_MEDIA_STATE
 
@@ -72,9 +72,9 @@ def check_selection(update: Update, context: CallbackContext):
 
 
 def ask_for_keywords(update: Update, context: CallbackContext):
-    chat_id = context.bot_data.get(CHAT_ON_EDITION_STATE_KEY)
+    chat_id = context.bot_data.get(CHAT_ON_EDITING_STATE_KEY)
     if not chat_id:
-        raise RuntimeError("Couldn't retrieve chat_id where edition is happening.")
+        raise RuntimeError("Couldn't retrieve chat_id where editing is happening.")
 
     logger.info(f"Editing message on chat {chat_id}.")
     doc_id = update.chosen_inline_result.result_id
@@ -94,12 +94,12 @@ def edit_keywords(update: Update, context: CallbackContext) -> int:
     user = update.message.from_user
     logger.info(f'Editing document from user {user.name}({user.id}).')
 
-    chat_on_edition_state = context.bot_data.get(CHAT_ON_EDITION_STATE_KEY)
-    if not chat_on_edition_state:
-        raise RuntimeError("Couldn't retrieve chat_id where edition is happening.")
+    chat_on_editing_state = context.bot_data.get(CHAT_ON_EDITING_STATE_KEY)
+    if not chat_on_editing_state:
+        raise RuntimeError("Couldn't retrieve chat_id where editing is happening.")
 
     chat = update.effective_chat
-    if chat_on_edition_state != chat.id:
+    if chat_on_editing_state != chat.id:
         logger.info(f'User {user.name}({user.id}) sent the keywords to edit on the wrong chat.')
         return SELECTING_MEDIA_STATE
 
@@ -119,8 +119,8 @@ def edit_keywords(update: Update, context: CallbackContext) -> int:
 
 def cancel(update: Update, context: CallbackContext) -> int:
     user = update.message.from_user
-    logger.info(f'User {user.name}({user.id}) canceled the the edition.')
-    update.effective_chat.send_message(text="Ok, canceling edition.")
+    logger.info(f'User {user.name}({user.id}) canceled the the editing.')
+    update.effective_chat.send_message(text="Ok, canceling editing.")
 
     return ConversationHandler.END
 
