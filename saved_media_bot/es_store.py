@@ -4,11 +4,12 @@ from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import NotFoundError
 
 from .common import filter_dict_none
+from .config import Config
 from .document import Document, DocumentType
 
 
 class ElasticsearchStore:
-    INDEX_NAME = 'telegram-saved-media-bot'
+    INDEX_NAME = Config.ES_INDEX_NAME
     INDEX_MAPPING = {
         'properties': {
             'created_at': {'type': 'date'},
