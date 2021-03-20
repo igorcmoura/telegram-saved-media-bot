@@ -26,10 +26,11 @@ class InlineResultCreatorLoader:
 
 
 def inline_search(update: Update, context: CallbackContext):
-    user = update.inline_query.from_user
+    inline_query = update.inline_query
+    user = inline_query.from_user
     logger.info(f'User {user.name}({user.id}) is querying a document.')
 
-    query = update.inline_query.query
+    query = inline_query.query
     if query:
         store_results = store.search(user_id=user.id, keywords=query)
     else:
@@ -39,11 +40,11 @@ def inline_search(update: Update, context: CallbackContext):
         inline_result_creators.get_for(doc.doc_type)(doc)
         for doc in store_results
     ]
-    context.bot.answer_inline_query(
-        inline_query_id=update.inline_query.id,
+    inline_query.answer(
         results=results,
         is_personal=True,
         cache_time=0,
+        auto_pagination=True,
     )
 
 
