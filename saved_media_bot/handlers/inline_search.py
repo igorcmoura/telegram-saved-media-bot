@@ -11,7 +11,7 @@ from ..document import Document, DocumentType
 logger = logging.getLogger(__name__)
 
 
-class InlineResultCreatorLoader:
+class InlineResultCreatorsLoader:
     def __init__(self):
         self._creators: Dict[DocumentType, Callable[[Document], InlineQueryResult]] = {}
 
@@ -58,7 +58,7 @@ def update_last_used_at(update: Update, context: CallbackContext):
     store.update(doc_id, doc)
 
 
-inline_result_creators = InlineResultCreatorLoader()
+inline_result_creators = InlineResultCreatorsLoader()
 inline_result_creator = inline_result_creators.decorator
 
 inline_search_handler = InlineQueryHandler(inline_search)
