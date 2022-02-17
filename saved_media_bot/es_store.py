@@ -41,7 +41,7 @@ class ElasticsearchStore:
         source = es_doc['_source']
         return self._doc_from_es_source(source, id)
 
-    def update(self, id: str, doc: Document):
+    def update(self, id: str, doc: Document) -> None:
         source = self._es_source_from_doc(doc)
         self._client.index(index=self.INDEX_NAME, id=id, body=source)
 
