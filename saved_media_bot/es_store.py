@@ -12,6 +12,7 @@ class ElasticsearchStore:
     INDEX_NAME = Config.ES_INDEX_NAME
     INDEX_MAPPING = {
         'properties': {
+            'content': {'type': 'object', 'enabled': False},
             'created_at': {'type': 'date'},
             'last_used_at': {'type': 'date'},
             'user_id': {'type': 'keyword'},
