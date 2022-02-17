@@ -25,6 +25,8 @@ CHAT_ON_DELETION_STATE_KEY = 'chat_on_deletion_state'
 
 
 def begin_delete(update: Update, context: CallbackContext):
+    """Step to store information about the chat where the deletion is happening"""
+
     user = update.message.from_user
     logger.info(f'User {user.name}({user.id}) stated a deletion.')
 
@@ -41,6 +43,8 @@ def begin_delete(update: Update, context: CallbackContext):
 
 
 def check_selection(update: Update, context: CallbackContext):
+    """Step to check if the user sent the message to the right chat and if they used the search query"""
+
     user = update.message.from_user
     chat = update.effective_chat
     logger.info(f'User {user.name}({user.id}) sent a message to delete on chat {chat.id}.')
@@ -69,6 +73,8 @@ def check_selection(update: Update, context: CallbackContext):
 
 
 def execute_deletion(update: Update, context: CallbackContext):
+    """Step to delete the document from the database"""
+
     chat_id = context.bot_data.get(CHAT_ON_DELETION_STATE_KEY)
     if not chat_id:
         raise RuntimeError("Couldn't retrieve chat_id where deletion is happening.")

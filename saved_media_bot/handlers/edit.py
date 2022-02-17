@@ -28,6 +28,8 @@ DOCUMENT_TO_EDIT_KEY = 'document_to_edit'
 
 
 def begin_edit(update: Update, context: CallbackContext):
+    """Step to store information about the chat where the editing is happening"""
+
     user = update.message.from_user
     logger.info(f'User {user.name}({user.id}) started an editing.')
 
@@ -44,6 +46,8 @@ def begin_edit(update: Update, context: CallbackContext):
 
 
 def check_selection(update: Update, context: CallbackContext):
+    """Step to check if the user sent the message to the right chat and if they used the search query"""
+
     user = update.message.from_user
     chat = update.effective_chat
     logger.info(f'User {user.name}({user.id}) sent a message to be edited on chat {chat.id}.')
@@ -72,6 +76,8 @@ def check_selection(update: Update, context: CallbackContext):
 
 
 def ask_for_keywords(update: Update, context: CallbackContext):
+    """Step to store information about the saved document to edit and ask for new keywords"""
+
     chat_id = context.bot_data.get(CHAT_ON_EDITING_STATE_KEY)
     if not chat_id:
         raise RuntimeError("Couldn't retrieve chat_id where editing is happening.")
@@ -91,6 +97,8 @@ def ask_for_keywords(update: Update, context: CallbackContext):
 
 
 def edit_keywords(update: Update, context: CallbackContext) -> int:
+    """Step to update the keywords and save the document"""
+
     user = update.message.from_user
     logger.info(f'Editing document from user {user.name}({user.id}).')
 

@@ -64,7 +64,7 @@ new_entry_handler = ConversationHandler(
         sticker_handler,
         video_handler,
         voice_handler,
-        # Some of the other handlers also accept text, so text_handler should be last to handle pure text messages
+        # Some of the other handlers also accept text, so text_handler should be last to handle only pure text messages
         text_handler,
     ],
     states={

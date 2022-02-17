@@ -39,7 +39,7 @@ handlers = [
     edit_handler,
     new_entry_handler,
     inline_search_handler,
-    # Chosen inline result handler must come after other handlers that uses chosen result
+    # Chosen inline result handler must come after other handlers that use the chosen result
     chosen_inline_result_handler,
     # Cancel fallback must be last so the actual cancel of other commands can be handled first
     cancel_fallback_handler,
